@@ -38,4 +38,8 @@
 #
 # Live example:
 
-custom/lua/test_npcs_in_gm_home.lua
+custom/sql/cwp_warp_points.sql
+custom/lua/cwp_command.lua
+custom/cpp/cwp_storage.cpp
+custom/lua/announce_player_login.lua
+
