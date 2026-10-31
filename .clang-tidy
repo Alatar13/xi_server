@@ -2,6 +2,17 @@
 # https://releases.llvm.org/14.0.0/tools/clang/tools/extra/docs/clang-tidy/checks/list.html
 Checks: >
   -*,
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-exception-escape,
+  -bugprone-implicit-widening-of-multiplication-result,
+  -bugprone-invalid-enum-default-initialization,
+  -bugprone-macro-parentheses,
+  -bugprone-narrowing-conversions,
+  -bugprone-parent-virtual-call,
+  -bugprone-switch-missing-default-case,
+  -bugprone-throwing-static-initialization,
+  -bugprone-unchecked-optional-access,
   cppcoreguidelines-avoid-goto,
   cppcoreguidelines-init-variables,
   cppcoreguidelines-no-malloc,
@@ -11,14 +22,41 @@ Checks: >
   cppcoreguidelines-slicing,
   cppcoreguidelines-special-member-functions,
   cppcoreguidelines-virtual-class-destructor,
-  misc-definitions-in-headers,
+  misc-*,
+  -misc-const-correctness,
+  -misc-include-cleaner,
+  -misc-multiple-inheritance,
+  -misc-no-recursion,
+  -misc-non-private-member-variables-in-classes,
+  -misc-unused-parameters,
+  -misc-use-internal-linkage,
   modernize-pass-by-value,
   modernize-use-emplace,
+  modernize-use-equals-default,
   modernize-use-nullptr,
   modernize-use-override,
+  modernize-use-trailing-return-type,
+  modernize-use-using,
   performance-*,
+  -performance-enum-size,
+  readability-avoid-const-params-in-decls,
+  readability-const-return-type,
+  readability-container-size-empty,
+  readability-make-member-function-const,
+
+CheckOptions:
+  bugprone-lambda-function-name.IgnoreMacros: true
+  modernize-use-trailing-return-type.TransformLambdas: none
 
 # TODO: Enable these
+#  bugprone-invalid-enum-default-initialization,
+#  bugprone-macro-parentheses,
+#  bugprone-narrowing-conversions,
+#  bugprone-parent-virtual-call,
+#  misc-const-correctness,
+#  misc-include-cleaner,
+#  misc-unused-parameters,
+#  misc-use-internal-linkage,
 #  concurrency-mt-unsafe,
 #  cppcoreguidelines-prefer-member-initializer,
 #  cppcoreguidelines-pro-type-vararg,
@@ -26,4 +64,5 @@ Checks: >
 # TODO: These are important, but they're destructive. Turn on one day.
 #  cppcoreguidelines-pro-type-static-cast-downcast,
 #  cppcoreguidelines-pro-type-cstyle-cast,
+#  performance-enum-size, (narrows enums that sit in packet and DB struct layouts)
 ...

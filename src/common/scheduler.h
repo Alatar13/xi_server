@@ -113,7 +113,7 @@ concept IsInvocableReturnsVoidOrAwaitableVoid = IsInvocableReturnsAwaitableVoid<
 //   Re-activates an exception that escaped a fire-and-forget task and routes it
 //   through std::terminate, which the installed terminate handler turns into a
 //   tombstone.
-[[noreturn]] inline void onUnhandledTaskException(std::exception_ptr eptr) noexcept
+[[noreturn]] inline void onUnhandledTaskException(const std::exception_ptr& eptr) noexcept
 {
     try
     {
@@ -131,7 +131,7 @@ concept IsInvocableReturnsVoidOrAwaitableVoid = IsInvocableReturnsAwaitableVoid<
 //   exception to onUnhandledTaskException instead of swallowing it.
 struct FatalOnException
 {
-    void operator()(std::exception_ptr eptr) const noexcept
+    void operator()(const std::exception_ptr& eptr) const noexcept
     {
         if (eptr)
         {
@@ -206,12 +206,12 @@ public:
         }
 
         // Disable copy
-        Token(const Token&)            = delete;
-        Token& operator=(const Token&) = delete;
+        Token(const Token&)                    = delete;
+        auto operator=(const Token&) -> Token& = delete;
 
         // Allow moving
-        Token(Token&&) noexcept            = default;
-        Token& operator=(Token&&) noexcept = default;
+        Token(Token&&) noexcept                    = default;
+        auto operator=(Token&&) noexcept -> Token& = default;
 
     private:
         std::shared_ptr<asio::cancellation_signal> signal_;
@@ -264,10 +264,10 @@ public:
         stop();
     }
 
-    Scheduler(const Scheduler&)            = delete;
-    Scheduler& operator=(const Scheduler&) = delete;
-    Scheduler(Scheduler&&)                 = delete;
-    Scheduler& operator=(Scheduler&&)      = delete;
+    Scheduler(const Scheduler&)                    = delete;
+    auto operator=(const Scheduler&) -> Scheduler& = delete;
+    Scheduler(Scheduler&&)                         = delete;
+    auto operator=(Scheduler&&) -> Scheduler&      = delete;
 
     // run
     //   Runs the main thread's event loop. Blocks until stopped.
@@ -626,7 +626,7 @@ public:
 
         std::unique_ptr<StoredType> result;
 
-        auto completion = [&](std::exception_ptr e, auto... res)
+        auto completion = [&](const std::exception_ptr& e, auto... res)
         {
             exceptPtr = e;
             if constexpr (!IsVoid)

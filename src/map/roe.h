@@ -23,6 +23,7 @@
 
 #include <array>
 #include <string>
+#include <utility>
 #include <variant>
 #include <vector>
 
@@ -71,23 +72,23 @@ const uint16 ROE_TRUST_ID[11] = {
     981   // Sylvie
 };
 
-typedef std::array<uint16, 6>            RecordTimetable_D;
-typedef std::array<RecordTimetable_D, 7> RecordTimetable_W;
+using RecordTimetable_D = std::array<uint16, 6>;
+using RecordTimetable_W = std::array<RecordTimetable_D, 7>;
 
 struct RoeSystemData
 {
-    RecordTimetable_W        TimedRecordTable;
-    xi::bitset<4096>         ImplementedRecords;
-    xi::bitset<4096>         RepeatableRecords;
-    xi::bitset<4096>         RetroactiveRecords;
-    xi::bitset<4096>         HiddenRecords;
-    xi::bitset<4096>         DailyRecords;
+    RecordTimetable_W        TimedRecordTable{};
+    xi::bitset<4096>         ImplementedRecords{};
+    xi::bitset<4096>         RepeatableRecords{};
+    xi::bitset<4096>         RetroactiveRecords{};
+    xi::bitset<4096>         HiddenRecords{};
+    xi::bitset<4096>         DailyRecords{};
     std::vector<uint16>      DailyRecordIDs;
-    xi::bitset<4096>         WeeklyRecords;
+    xi::bitset<4096>         WeeklyRecords{};
     std::vector<uint16>      WeeklyRecordIDs;
-    xi::bitset<4096>         UnityRecords;
+    xi::bitset<4096>         UnityRecords{};
     std::vector<uint16>      UnityRecordIDs;
-    xi::bitset<4096>         TimedRecords;
+    xi::bitset<4096>         TimedRecords{};
     std::array<uint32, 4096> NotifyThresholds    = {};
     uint8                    unityLeaderRank[11] = {}; // 0..10 for Unity Leader, stores rank position
 
@@ -104,33 +105,33 @@ struct RoeCheckHandler
 
 extern std::array<RoeCheckHandler, ROE_NONE> RoeHandlers;
 
-typedef std::variant<uint32, CMobEntity*, std::string> RoeDatagramPayload;
+using RoeDatagramPayload = std::variant<uint32, CMobEntity*, std::string>;
 
 struct RoeDatagram
 {
     std::string        luaKey;
     RoeDatagramPayload data;
 
-    RoeDatagram(const std::string& param, uint32 payload)
-    : luaKey{ param }
+    RoeDatagram(std::string param, uint32 payload)
+    : luaKey{ std::move(param) }
     , data{ payload }
     {
     }
 
-    RoeDatagram(const std::string& param, CMobEntity* payload)
-    : luaKey{ param }
+    RoeDatagram(std::string param, CMobEntity* payload)
+    : luaKey{ std::move(param) }
     , data{ payload }
     {
     }
 
-    RoeDatagram(const std::string& param, const std::string& payload)
-    : luaKey{ param }
+    RoeDatagram(std::string param, const std::string& payload)
+    : luaKey{ std::move(param) }
     , data{ payload }
     {
     }
 };
 
-typedef std::vector<RoeDatagram> RoeDatagramList;
+using RoeDatagramList = std::vector<RoeDatagram>;
 
 namespace roeutils
 {

@@ -39,7 +39,7 @@ namespace conquest
 // TODO: This should be a member of _something_
 Maybe<ConquestData> conquestData;
 
-ConquestData& GetConquestData()
+auto GetConquestData() -> ConquestData&
 {
     if (!conquestData)
     {
@@ -147,13 +147,8 @@ void GainInfluencePoints(CCharEntity* PChar, uint32 points)
 
 auto GetInfluenceGraphics(const int32 san_inf, const int32 bas_inf, const int32 win_inf, const int32 bst_inf) -> uint8
 {
-    // if all nations and beastmen == 0
-    if (san_inf == 0 && bas_inf == 0 && win_inf == 0 && bst_inf == 0)
-    {
-        return 0;
-    }
-    // if all nations and beastmen, has same number
-    else if (san_inf == bas_inf && san_inf == win_inf && san_inf == bst_inf)
+    // if all nations and beastmen have the same influence, including all at 0
+    if (san_inf == bas_inf && san_inf == win_inf && san_inf == bst_inf)
     {
         return 0;
     }
@@ -440,7 +435,7 @@ void HandleInfluenceUpdate(const std::vector<influence_t>& influences, ShouldUpd
  *  Ranking for the 3 nations                                           *
  ************************************************************************/
 
-uint8 GetBalance(uint8 sandoria, uint8 bastok, uint8 windurst)
+auto GetBalance(uint8 sandoria, uint8 bastok, uint8 windurst) -> uint8
 {
     // Based on the below values, it seems to be in pairs of bits.
     // Order is Windurst, Bastok, San d'Oria
@@ -475,7 +470,7 @@ uint8 GetBalance(uint8 sandoria, uint8 bastok, uint8 windurst)
     return ranking;
 }
 
-uint8 GetBalance()
+auto GetBalance() -> uint8
 {
     uint8 sandoria = GetConquestData().getRegionControlCount(xi::Nation::Sandoria);
     uint8 bastok   = GetConquestData().getRegionControlCount(xi::Nation::Bastok);
@@ -485,7 +480,7 @@ uint8 GetBalance()
 }
 
 // Bits are nations allied: Sandoria, Bastok, Windurst
-uint8 GetAlliance(uint8 sandoria, uint8 bastok, uint8 windurst)
+auto GetAlliance(uint8 sandoria, uint8 bastok, uint8 windurst) -> uint8
 {
     if (sandoria > bastok + windurst)
     {
@@ -550,7 +545,7 @@ auto GetRegionOwner(const xi::Region region) -> xi::Nation
 
 // TODO: Take into account the added points for the weekly tally
 // NOTE: This todo was an old comment. Unsure if it's still valid
-uint32 AddConquestPoints(CCharEntity* PChar, uint32 exp)
+auto AddConquestPoints(CCharEntity* PChar, uint32 exp) -> uint32
 {
     // NOTE: No need to send CConquestPacket,
     // The client itself requests this packet after a fixed period of time

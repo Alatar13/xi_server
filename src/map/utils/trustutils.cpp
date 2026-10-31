@@ -52,8 +52,11 @@ void BuildTrustData(uint32 TrustID);
 auto LoadTrust(CCharEntity* PMaster, uint32 TrustID) -> CTrustEntity*;
 void LoadTrustStatsAndSkills(CTrustEntity* PTrust);
 
+namespace
+{
+
 // List of trusts that are essentially walking GEO bubbles that should not be targetable
-static std::unordered_set<SpellID> passiveTrustIDs = {
+std::unordered_set<SpellID> passiveTrustIDs = {
     SpellID::Sakura,
     SpellID::Moogle,
     SpellID::Star_Sibyl,
@@ -62,6 +65,8 @@ static std::unordered_set<SpellID> passiveTrustIDs = {
     SpellID::Kupofried,
     SpellID::Cornelia,
 };
+
+} // namespace
 
 struct TrustData
 {
@@ -756,7 +761,7 @@ void LoadTrustStatsAndSkills(CTrustEntity* PTrust)
         }
 
         // Only get access to skills that produce Lv3 SCs after Lv60
-        bool canFormLv3Skillchain = skill.primary >= SC_GRAVITATION || skill.secondary >= SC_GRAVITATION || skill.tertiary >= SC_GRAVITATION;
+        bool canFormLv3Skillchain = skill.primary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.secondary >= std::to_underlying(xi::SkillchainType::Gravitation) || skill.tertiary >= std::to_underlying(xi::SkillchainType::Gravitation);
 
         // Special case for Zeid II and others who only have Lv3+ skills
         bool onlyHasLv3Skillchains = canFormLv3Skillchain && controller->m_GambitsContainer->tp_skills.empty();
